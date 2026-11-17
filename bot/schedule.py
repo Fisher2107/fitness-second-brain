@@ -119,6 +119,8 @@ async def data_sync_job(ctx: ContextTypes.DEFAULT_TYPE) -> None:
                     "  • Garmin: log in at https://connect.garmin.com once (clears MFA / captcha)\n"
                     "  • Strava: re-run `python scripts/sync.py --source strava --auth` and "
                     "update the STRAVA_REFRESH_TOKEN secret\n"
+                    "  • WHOOP: re-run `python scripts/sync.py --source whoop --auth` on the "
+                    "machine that syncs WHOOP (see docs/data-sources.md#whoop)\n"
                     "The bot retries on the next sync.\n\n"
                     f"_Details: {info[:200]}_",
                     parse_mode=ParseMode.MARKDOWN,
@@ -162,6 +164,8 @@ async def morning_ping_job(ctx: ContextTypes.DEFAULT_TYPE) -> None:
             bits.append(f"RHR {w_last_night['resting_hr']}")
         if w_last_night.get("hrv_last_night_ms"):
             bits.append(f"HRV {w_last_night['hrv_last_night_ms']} ms")
+        if w_last_night.get("recovery_score") is not None:
+            bits.append(f"recovery {w_last_night['recovery_score']}%")
         if bits:
             parts.append("*Body:* " + " | ".join(bits))
             parts.append("")

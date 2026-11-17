@@ -71,7 +71,7 @@ Plan changes: edit `plans/current-week.md` first. Touch `plan-data.json` and `se
 
 ### Data sync
 
-`python scripts/sync.py` pulls from every source in `DATA_SOURCES` (Garmin, Apple Health, Strava, FIT/GPX/TCX files) into `data/sync-cache.json`. `--status` shows what's configured. Exit code 2 means a source needs the human to re-authenticate: tell them the fix from [docs/data-sources.md](docs/data-sources.md) and don't retry in a loop. To add a device, write a provider; the contract is in that doc. Reports with no API calls: `python scripts/report.py [--current-week | --weeks N | --month YYYY-MM | --archive]`.
+`python scripts/sync.py` pulls from every source in `DATA_SOURCES` (Garmin, WHOOP, Apple Health, Strava, FIT/GPX/TCX files) into `data/sync-cache.json`. `--status` shows what's configured. Exit code 2 means a source needs the human to re-authenticate: tell them the fix from [docs/data-sources.md](docs/data-sources.md) and don't retry in a loop. To add a device, write a provider; the contract is in that doc. Reports with no API calls: `python scripts/report.py [--current-week | --weeks N | --month YYYY-MM | --archive]`.
 
 ### Logging
 
@@ -134,7 +134,7 @@ Distilling a source: [/distill](.claude/commands/distill.md). Full method: [docs
 - **The A-goal wins conflicts.** When disciplines collide, the A-goal in `goals.md` wins, and you say so explicitly. See [a-goal-wins-conflicts](concepts/a-goal-wins-conflicts.md).
 - **Recovery is the most likely failure mode.** Several disciplines add up to a lot of stress, so be conservative about stacking intensity. See [recovery-is-part-of-training](concepts/recovery-is-part-of-training.md) and [dont-stack-high-intensity](concepts/dont-stack-high-intensity.md).
 - **Joint longevity matters as much as performance.** No volume or load jump over ~10% a week. See [progressive-overload](concepts/progressive-overload.md).
-- **Trends over single readings.** One bad HRV or resting-HR morning is noise; three is a signal. Never compare Apple's SDNN with Garmin's RMSSD.
+- **Trends over single readings.** One bad HRV or resting-HR morning is noise; three is a signal. Never compare Apple's SDNN with Garmin's or WHOOP's RMSSD, and don't mix devices even when both say RMSSD. WHOOP recovery % is one input, not a verdict: read it next to how the athlete feels.
 - **Check the data before concluding.** Watches record faults (GPS jumps, HR dropouts, auto-pause gaps). With Garmin details synced, `scripts/garmin/garmin-audit.py` finds them and `scripts/garmin/run-splits.py` gives honest per-km splits on moving time.
 
 ## Workspace status

@@ -4,7 +4,7 @@ A training workspace you run with an AI agent (built for [Claude Code](https://c
 
 - **A second brain:** a Zettelkasten knowledge base of ~140 atomic training concepts and 16 maps of content (running, strength, calisthenics, mobility, recovery, injury management), distilled from established training books and cited. You grow it further by distilling the books and plans you trust.
 - **Your plan:** imported from wherever you already have one (a coach, Runna, a spreadsheet, a book) or built with you from your goals.
-- **Your data:** synced from a Garmin, Apple Watch, Strava (Coros, Polar, Suunto, Wahoo...) or plain FIT/GPX/TCX files, into one format.
+- **Your data:** synced from a Garmin, WHOOP, Apple Watch, Strava (Coros, Polar, Suunto, Wahoo...) or plain FIT/GPX/TCX files, into one format.
 - **Two live pages:** your plan with actual sessions laid over it, and your progress (heartbeats per km, pace against heart rate). They are published as private Claude Artifacts and republish themselves when new data comes in.
 - **Optional:** a Telegram bot for logging from your phone, daily pings and an approve-or-refine Sunday review, plus a local dashboard.
 
@@ -32,13 +32,14 @@ After that, say "log today's run" (or `/log-training`) after sessions, and `/wee
 
 - Python 3.10+
 - Claude Code with a claude.ai account (for the Artifact pages). Any other agent can use everything except publishing; the pages build locally.
-- Optional: a Garmin / Apple Watch / Strava account; Telegram + Fly.io + Gemini and Anthropic API keys for the bot; an OpenWeatherMap key for weather.
+- Optional: a Garmin / WHOOP / Apple Watch / Strava account; Telegram + Fly.io + Gemini and Anthropic API keys for the bot; an OpenWeatherMap key for weather.
 
 ## Connecting your data
 
 | You use | In `.env` | Details |
 |---|---|---|
 | Garmin | `DATA_SOURCES=garmin` + login | [docs/data-sources.md#garmin](docs/data-sources.md#garmin) |
+| WHOOP | `DATA_SOURCES=whoop` (or `strava,whoop` if runs go to Strava) | WHOOP developer app + one-time OAuth: [docs](docs/data-sources.md#whoop) |
 | Apple Watch | `DATA_SOURCES=apple_health` | Health export, or the Health Auto Export app for daily automation: [docs](docs/data-sources.md#apple-watch--apple-health) |
 | Coros / Polar / Suunto / Wahoo / Zwift | `DATA_SOURCES=strava` | one-time Strava OAuth: [docs](docs/data-sources.md#strava) |
 | Exported files | `DATA_SOURCES=files` | drop .fit/.gpx/.tcx in `data/inbox/files/` |

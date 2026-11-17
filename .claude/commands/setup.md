@@ -54,6 +54,7 @@ Ask what they record training with, then configure it. Full instructions per dev
 | They use | `DATA_SOURCES` | What they need to do |
 |---|---|---|
 | Garmin watch | `garmin` | put `GARMIN_EMAIL` / `GARMIN_PASSWORD` in `.env` |
+| WHOOP | `whoop` (`strava,whoop` if runs are recorded with a GPS watch / phone app that uploads to Strava) | create a WHOOP developer app, put `WHOOP_CLIENT_ID` / `WHOOP_CLIENT_SECRET` in `.env`, run `python scripts/sync.py --source whoop --auth` |
 | Apple Watch | `apple_health` (+ `strava` for activities, optional) | Health app → Export All Health Data → `data/inbox/apple-health/`; for daily automation, the Health Auto Export app writing to a synced folder set as `APPLE_HEALTH_DIR` |
 | Coros, Polar, Suunto, Wahoo, Fitbit, Zwift... | `strava` | create a Strava API app, run `python scripts/sync.py --source strava --auth` |
 | Exports files only | `files` | drop .fit / .gpx / .tcx into `data/inbox/files/` |

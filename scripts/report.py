@@ -2,7 +2,7 @@
 """Read-only reports over already-synced training data (any provider).
 
 Does NOT call any API — reads data/sync-cache.json, which scripts/sync.py
-maintains for Garmin, Apple Health, Strava or file imports alike.
+maintains for Garmin, WHOOP, Apple Health, Strava or file imports alike.
 
 Modes:
   python scripts/report.py                       # weekly digest (last completed week)
@@ -108,6 +108,8 @@ def stats_block(wellness: list[dict]) -> dict:
         "avg_sleep_score": avg([w.get("sleep_score") for w in wellness], ignore_zero=True),
         "avg_steps": int(steps_avg) if steps_avg else None,
         "avg_stress": avg([w.get("stress_avg") for w in wellness], ignore_zero=True),
+        "avg_recovery": avg([w.get("recovery_score") for w in wellness]),
+        "avg_day_strain": avg([w.get("day_strain") for w in wellness]),
     }
 
 
@@ -158,13 +160,15 @@ def fmt_weekly(start: dt.date, end: dt.date, acts: list[dict], wellness: list[di
                                           + (f" (score {s['avg_sleep_score']})" if s["avg_sleep_score"] else ""))
         if s["avg_steps"]: bits.append(f"{s['avg_steps']:,} steps/day")
         if s["avg_stress"]: bits.append(f"stress {s['avg_stress']}")
+        if s["avg_recovery"] is not None: bits.append(f"recovery {s['avg_recovery']}%")
+        if s["avg_day_strain"] is not None: bits.append(f"day strain {s['avg_day_strain']}")
         lines.append(f"**Wellness averages ({s['days_with_data']}d):** " + " | ".join(bits))
         lines.append("")
 
         # Day-by-day RHR/HRV/sleep
         lines.append("**Daily wellness:**")
-        lines.append("| Date | RHR | HRV | Sleep | Score | BB lo-hi |")
-        lines.append("|---|---|---|---|---|---|")
+        lines.append("| Date | RHR | HRV | Sleep | Score | BB lo-hi | Recovery | Strain |")
+        lines.append("|---|---|---|---|---|---|---|---|")
         for w in wellness:
             rhr = w.get("resting_hr") or ""
             hrv = w.get("hrv_last_night_ms") or ""
@@ -172,7 +176,9 @@ def fmt_weekly(start: dt.date, end: dt.date, acts: list[dict], wellness: list[di
             score = w.get("sleep_score") or ""
             bb = (f"{w['body_battery_low']}-{w['body_battery_high']}"
                   if w.get("body_battery_low") and w.get("body_battery_high") else "")
-            lines.append(f"| {w['date']} | {rhr} | {hrv} | {sleep} | {score} | {bb} |")
+            rec = f"{w['recovery_score']}%" if w.get("recovery_score") is not None else ""
+            strain = w.get("day_strain") if w.get("day_strain") is not None else ""
+            lines.append(f"| {w['date']} | {rhr} | {hrv} | {sleep} | {score} | {bb} | {rec} | {strain} |")
         lines.append("")
 
     return "\n".join(lines)

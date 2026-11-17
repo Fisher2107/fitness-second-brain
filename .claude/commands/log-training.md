@@ -12,7 +12,7 @@ python scripts/sync.py            # add --days N if the last sync was more than 
 
 It prints `NEW ACTIVITIES` that it hasn't seen before. If `DATA_SOURCES` is empty, skip to step 2 and ask the athlete what they did.
 
-**If a source reports AUTH FAILURE**, follow the fix for that source in [docs/data-sources.md](../../docs/data-sources.md) once (e.g. Garmin: delete `~/.garminconnect/` and retry; still failing → ask them to log in at connect.garmin.com to clear MFA). Don't loop, and never read or echo `.env`. Don't sync more than about once an hour.
+**If a source reports AUTH FAILURE**, follow the fix for that source in [docs/data-sources.md](../../docs/data-sources.md) once (e.g. Garmin: delete `~/.garminconnect/` and retry; still failing → ask them to log in at connect.garmin.com to clear MFA; WHOOP: they re-run `python scripts/sync.py --source whoop --auth`). Don't loop, and never read or echo `.env`. Don't sync more than about once an hour.
 
 ## 2. Find what's unlogged
 

@@ -26,7 +26,7 @@ Scheduled (in `TIMEZONE`):
 
 | Time | Job |
 |---|---|
-| 06:00 | Data sync (`scripts/sync.py --cloud`: Garmin / Strava), commits `data/`. Alerts you on auth failures. |
+| 06:00 | Data sync (`scripts/sync.py --cloud`: Garmin / WHOOP / Strava), commits `data/`. Alerts you on auth failures. |
 | 07:00 | Morning ping: today's sessions, last night's sleep / resting HR / HRV |
 | 20:00 | Evening ping: tomorrow's sessions, and a flag if today's planned run wasn't synced |
 | Sun 20:15 | Weekly review drafted by Claude, with Approve / Refine / Reject. Approving writes the review to `logs/`, archives the old week and writes the new `plans/current-week.md` |
@@ -58,6 +58,7 @@ You need: a Telegram account, a free [Fly.io](https://fly.io) account (a card on
    grep -v '^#' bot/.env | grep . | fly secrets import --app <your-app-name>
    # data-source credentials, so the 06:00 sync can run in the cloud:
    grep -E '^(DATA_SOURCES|GARMIN_|STRAVA_)' .env | fly secrets import --app <your-app-name>
+   # WHOOP: see "WHOOP on the bot" below before adding its secrets
    fly secrets set --app <your-app-name> WORKSPACE_REPO_URL=https://github.com/<you>/<repo>.git
    ```
    Then deploy (from the repo root):
@@ -78,7 +79,8 @@ You need: a Telegram account, a free [Fly.io](https://fly.io) account (a card on
 ## Common issues
 
 - **No replies.** Check the logs. `Conflict: terminated by other getUpdates request` → another copy is polling (probably a local run). `401 Unauthorized` → token revoked; reset `TELEGRAM_BOT_TOKEN`. Nothing recent → machine stopped.
-- **"Data sync: auth failure".** Garmin: log in once at connect.garmin.com. Strava: redo the `--auth` step in [data-sources.md](data-sources.md) and update `STRAVA_REFRESH_TOKEN`.
+- **"Data sync: auth failure".** Garmin: log in once at connect.garmin.com. Strava: redo the `--auth` step in [data-sources.md](data-sources.md) and update `STRAVA_REFRESH_TOKEN`. WHOOP: see below.
+- **WHOOP on the bot.** WHOOP invalidates each refresh token as soon as it's used, and the bot's workspace is a fresh clone on every restart, so a `WHOOP_REFRESH_TOKEN` secret only works until the first refresh. To sync WHOOP from the bot, give it a [Fly volume](https://fly.io/docs/volumes/) (`fly volumes create whoop_tokens --size 1`, a `[mounts]` block in `fly.toml` with `source = "whoop_tokens"` and `destination = "/data"`), set the secrets `WHOOP_CLIENT_ID`, `WHOOP_CLIENT_SECRET`, `WHOOP_TOKEN_FILE=/data/whoop-token.json` and a fresh `WHOOP_REFRESH_TOKEN` (from `--auth` on your laptop, then **stop syncing WHOOP on the laptop**, since only one machine can hold the token chain). This setup hasn't been tested on Fly yet; the simpler option is to keep WHOOP syncing on your own computer with a cron job.
 - **Sunday review never arrived.** Check the logs around 20:15 and that the machine was running. Run `/review` to retry.
 - **Can't push to GitHub.** The PAT expired or lacks Contents: write. Generate a new one and update `GITHUB_TOKEN`.
 
