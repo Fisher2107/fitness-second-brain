@@ -6,11 +6,11 @@
       "icon": "calendar",
       "description": "Day-by-day training plan with logged sessions laid over it.",
       "url": null,
-      "built_hash": null,
-      "built_at": null,
+      "built_hash": "4f4ea3adfc84fc33",
+      "built_at": "2026-11-21T12:47:50",
       "published_hash": null,
       "published_at": null,
-      "has_data": null
+      "has_data": false
     },
     "progress": {
       "file": "artifacts/progress.html",
@@ -18,11 +18,11 @@
       "icon": "chart",
       "description": "Every logged run: heartbeats per km, pace against heart rate, trends.",
       "url": null,
-      "built_hash": null,
-      "built_at": null,
+      "built_hash": "3c1864812b03686a",
+      "built_at": "2026-11-21T12:47:50",
       "published_hash": null,
       "published_at": null,
-      "has_data": null
+      "has_data": false
     }
   }
 }
