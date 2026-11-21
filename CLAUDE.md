@@ -19,7 +19,7 @@ Then orient: [profile.md](profile.md) (who), [goals.md](goals.md) (what for), [p
 
 1. **Never invent data.** Unknown mileage, PBs, how a session felt, injury status: read the logs or ask. Mark estimates as estimates.
 2. **Credentials stay in `.env` / `bot/.env`, typed by the user.** Never ask for a password or token in chat, never print or echo `.env` contents. To check a key is set, print only its length.
-3. **This copy of the repo holds personal health data.** It must only ever be pushed to a **private** repository. Ask before any `git push`, and before creating or changing a remote.
+3. **Personal data stays local (the athlete's choice, 2026-11-21).** Never commit or push the athlete's data: `profile.md`, `goals.md`, `plans/`, `logs/`, `inbox/`, `data/`. Only code, docs and knowledge-base changes go to GitHub, and the repo must still be **private**. Ask before any `git push`, and before creating or changing a remote. In a cloud session, "local" means a container that is wiped when the session ends, so do personal-data work (setup, logging, plans) on the athlete's own computer.
 4. **Don't fake the bot.** `inbox/phone-*.md` files and `bot:` / `weekly review:` commits come from the Telegram bot only.
 5. **Flag uncertainty.** If you're not sure a piece of training advice is sound, say so. Be conservative with injuries.
 
@@ -141,6 +141,7 @@ Distilling a source: [/distill](.claude/commands/distill.md). Full method: [docs
 
 > Keep this section current across sessions: setup state, connected sources, open work. Training sessions go in `logs/`, not here.
 
-- Setup: **not done**. Run /setup.
-- Data sources: none configured.
+- Setup: **not done**. Run /setup on the athlete's computer (rule 3). Goals were discussed in an earlier cloud session but never saved; ask the athlete for them again.
+- Data sources: the WHOOP provider is in the code (`scripts/providers/whoop.py`). The WHOOP login on the athlete's computer is unconfirmed. Strava, planned for runs, is not set up.
 - Published pages: none yet (see `artifacts/manifest.json`).
+- Telegram bot: not deployed. As built, it commits synced data and logs to GitHub, which rule 3 rules out.
