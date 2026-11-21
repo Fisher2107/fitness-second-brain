@@ -3,6 +3,7 @@
 
 Sources are listed in .env, highest priority first:
   DATA_SOURCES=garmin                 # Garmin watch
+  DATA_SOURCES=whoop                  # WHOOP band (add strava first for GPS runs)
   DATA_SOURCES=apple_health,strava    # Apple Watch wellness + Strava activities
   DATA_SOURCES=files                  # FIT/GPX/TCX files dropped into data/inbox/files/
 
@@ -14,6 +15,7 @@ Usage:
   python scripts/sync.py --source garmin --backfill --start 2025-01-01
   python scripts/sync.py --source apple_health --file ~/Downloads/export.zip
   python scripts/sync.py --source strava --auth   # one-time Strava OAuth
+  python scripts/sync.py --source whoop --auth    # one-time WHOOP OAuth
   python scripts/sync.py --cloud                  # only sources that can run unattended (bot host)
   python scripts/sync.py --status                 # what's configured, last sync per source
 
@@ -36,7 +38,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import datastore  # noqa: E402
 from datastore import ProviderAuthError, ProviderNotConfigured  # noqa: E402
 
-PROVIDERS = ("garmin", "apple_health", "strava", "files")
+PROVIDERS = ("garmin", "whoop", "apple_health", "strava", "files")
 FILE_BASED = {"apple_health", "files"}  # their input files define the history, not --days
 
 
@@ -70,8 +72,8 @@ def main() -> int:
     ap.add_argument("--with-fit", action="store_true", help="garmin: save original FIT files")
     ap.add_argument("--backfill", action="store_true", help="garmin: details + FIT + raw wellness")
     ap.add_argument("--cloud", action="store_true", help="skip sources that need local files")
-    ap.add_argument("--auth", action="store_true", help="strava: run the one-time OAuth flow")
-    ap.add_argument("--code", help="strava: authorization code from the redirect URL")
+    ap.add_argument("--auth", action="store_true", help="strava/whoop (with --source): run the one-time OAuth flow")
+    ap.add_argument("--code", help="strava/whoop: authorization code, or (whoop) the whole redirect URL")
     ap.add_argument("--activity-id", help="garmin: dump one activity's raw detail JSON")
     ap.add_argument("--status", action="store_true", help="show configuration and last syncs")
     ap.add_argument("--json", action="store_true", help="print new activities as JSON")

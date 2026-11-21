@@ -214,14 +214,17 @@ def _fmt_activities(acts: list[dict]) -> str:
 def _fmt_wellness(wells: list[dict]) -> str:
     if not wells:
         return "(no wellness data for this week)"
-    lines = ["| Date | RHR | HRV ms | Sleep h | Score | BB lo-hi |", "|---|---|---|---|---|---|"]
+    lines = ["| Date | RHR | HRV ms | Sleep h | Score | BB lo-hi | Recovery % | Day strain |",
+             "|---|---|---|---|---|---|---|---|"]
     for w in wells:
         rhr = w.get("resting_hr") or "-"
         hrv = w.get("hrv_last_night_ms") or "-"
         sleep_h = f"{w['sleep_total_min']/60:.1f}" if w.get("sleep_total_min") else "-"
         score = w.get("sleep_score") or "-"
         bb = (f"{w.get('body_battery_low','-')}-{w.get('body_battery_high','-')}")
-        lines.append(f"| {w['date']} | {rhr} | {hrv} | {sleep_h} | {score} | {bb} |")
+        rec = w.get("recovery_score") if w.get("recovery_score") is not None else "-"
+        strain = w.get("day_strain") if w.get("day_strain") is not None else "-"
+        lines.append(f"| {w['date']} | {rhr} | {hrv} | {sleep_h} | {score} | {bb} | {rec} | {strain} |")
     return "\n".join(lines)
 
 

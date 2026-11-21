@@ -1,6 +1,6 @@
 """Normalized store for synced training data.
 
-Every provider (Garmin, Apple Health, Strava, FIT/GPX/TCX files) maps its
+Every provider (Garmin, WHOOP, Apple Health, Strava, FIT/GPX/TCX files) maps its
 native format into the SAME two record shapes below. Everything downstream —
 the bot, the dashboard, the published pages, the weekly review — reads only
 `data/sync-cache.json` and never cares which device the data came from.
@@ -38,7 +38,7 @@ DEDUPE_WINDOW_MIN = 3
 # The normalized shapes. Providers fill what they can; everything else is None.
 ACTIVITY_FIELDS = (
     "id",               # provider-native id as a string, unique within the provider
-    "source",           # provider name: garmin | apple_health | strava | files
+    "source",           # provider name: garmin | whoop | apple_health | strava | files
     "name",             # human label ("Morning Run")
     "type",             # canonical type, see CANONICAL_TYPES
     "subtype",          # provider-native type string, kept for reference
@@ -49,7 +49,7 @@ ACTIVITY_FIELDS = (
     "avg_hr",
     "max_hr",
     "calories",
-    "training_load",    # provider-specific load score (Garmin load, Strava suffer score)
+    "training_load",    # provider-specific load score (Garmin load, WHOOP strain 0-21, Strava suffer score)
     "vo2max",
     "elevation_gain_m",
 )
@@ -62,7 +62,7 @@ WELLNESS_FIELDS = (
     "sleep_score",
     "resting_hr",
     "hrv_last_night_ms",
-    "hrv_method",       # "rmssd" (Garmin, most chest straps) or "sdnn" (Apple) — not comparable
+    "hrv_method",       # "rmssd" (Garmin, WHOOP, most chest straps) or "sdnn" (Apple) — not comparable
     "steps",
     "body_battery_high",
     "body_battery_low",
@@ -70,6 +70,8 @@ WELLNESS_FIELDS = (
     "vo2max_running",
     "weight_kg",
     "max_hr",
+    "recovery_score",   # WHOOP Recovery % (0-100); None for other devices
+    "day_strain",       # WHOOP day strain (0-21) for the day starting this morning
 )
 
 CANONICAL_TYPES = (

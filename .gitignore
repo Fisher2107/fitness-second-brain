@@ -3,6 +3,9 @@
 bot/.env
 .garminconnect/
 data/.strava-token.json
+data/.whoop-token.json
+data/.whoop-token.json.tmp
+data/.whoop-auth-state
 
 # Raw device archives (FIT files, per-second streams) and dropped-in exports — large, personal
 data/raw/
